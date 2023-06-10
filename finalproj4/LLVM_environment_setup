@@ -1,0 +1,116 @@
+In this project, we will use llvm-10.0.1 and clang-10.0.1. You have two choices: (1) build your own environment and (2) work on the lab on the cs165-internal server. If you decide to do it on the server, you can skip to step 1-3 and start from step 4.
+
+# 1. Build LLVM and Clang on your own system
+# LLVM source code: https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.1/llvm-10.0.1.src.tar.xz
+# Clang source code: https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.1/clang-10.0.1.src.tar.xz
+
+# All commands below are tested on Ubuntu 18.04.2, which we suggest you to download for VM installation: https://old-releases.ubuntu.com/releases/18.04.2/ubuntu-18.04.2-desktop-amd64.iso
+# Make sure you have basic developement tool-chain, e.g. gcc, cmake, make
+# If you start from a fresh installation of ubuntu-18.04.2, you can install the basic dev tool-chain by commands:
+sudo apt-get install build-essential
+sudo apt-get install cmake
+
+# Commands to download source code files (e.g. llvm):
+wget https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.1/llvm-10.0.1.src.tar.xz
+
+# Commands to unzip source code files:
+xz -d llvm-10.0.1.src.tar.xz
+tar -xvf llvm-10.0.1.src.tar
+
+# Make sure you have gcc above version 5.1 installed (by default it should be and you can check by 'gcc -v')
+# Commands to compile llvm:
+cd llvm-10.0.1.src
+mkdir build
+cd build
+cmake .. -DCMAKE_BUILD_TYPE=Release
+make -j 8
+
+# Commands to download clang source code files:
+wget https://github.com/llvm/llvm-project/releases/download/llvmorg-10.0.1/clang-10.0.1.src.tar.xz
+
+# Commands to unzip source code files:
+xz -d clang-10.0.1.src.tar.xz
+tar -xvf clang-10.0.1.src.tar
+
+# Commands to compile clang (After llvm compile done):
+# (IMPORTANT) Make sure you replace /path/to/llvm10.0.1.src/ with the actual path in your file system
+cd clang-10.0.1.src
+mkdir build
+cd build
+cmake .. -DCMAKE_BUILD_TYPE=Release -DLLVM_CONFIG=/path/to/llvm-10.0.1.src/build/bin/llvm-config
+make -j 8
+
+
+
+# 2. Setup LLVM development environment
+
+# Append the following lines in your ~/.bashrc file:
+# (IMPORTANT) Make sure you replace /path/to/... with the actual path in your file system
+export PATH=/path/to/llvm-10.0.1.src/build/bin:$PATH
+export PATH=/path/to/clang-10.0.1.src/build/bin:$PATH
+export LLVM_DIR=/path/to/llvm-10.0.1.src/build/lib/cmake/llvm
+
+# Commands to refresh your bash:
+source ~/.bashrc
+
+
+
+# 3 (optional). Compile the target program (.c) into LLVM IR (.ll)
+
+# In this project, we have already compiled the target program into LLVM IR. 
+# In case you are curious how the compilation works, you can try the following command.
+# clang -emit-llvm -S -fno-discard-value-names -O2 memoryoverflow.c -g -o memoryoverflow.ll
+
+# This will give you a human-readable IR memoryoverflow.ll. Check the LLVM_intro.pdf as well as samplellvmpass/samplepass.cpp for intro of LLVM IR.
+
+
+
+# 4. Compile the LLVM pass --- it is used to statically analyze a target program in the form of LLRM IR (.ll)
+
+# Commands to compile sample llvm pass we provide in folder 'samplellvmpass' (Make sure you've setup the environment of llvm & clang earlier successfully and correctly):
+# cmake and make will depend on the environment variable you set up in step 2 (so make sure the path is correct).
+cd samplellvmpass
+mkdir build
+cd build
+cmake .. # (Use 'cmake3 ..' on CS165 server)
+make
+
+# After this, you should be able to see the llvm pass is compiled into samplellvmpass/build/libsamplepass.so
+
+
+
+# 5. Run the sample LLVM pass
+
+# Commands to use this llvm pass to analyze a llvm IR file (e.g., memoryoverflow.ll):
+opt -load samplellvmpass/build/libsamplepass.so -sample memoryoverflow/memoryoverflow.ll
+
+# Then you should be able to see outputs like:
+# calleename: llvm.memset.p0i8.i64
+# linenum: 11
+# argnum: 0 pointeesize: 80
+# argnum: 1 constant: 2
+# argnum: 2 constant: 96
+# argnum: 3 constant: 0
+# calleename: llvm.memset.p0i8.i64
+# linenum: 12
+# argnum: 0 pointeesize: 80
+# argnum: 1 constant: 2
+# argnum: 2 constant: 48
+# argnum: 3 constant: 0
+
+# Cross check the input IR file, output and the sample pass codes to understand how llvm pass works.
+# input IR: memoryoverflow/memoryoverflow.ll
+# output: samplellvmpass/samplepassoutput
+# sample pass codes: samplellvmpass/samplepass.cpp
+
+
+# When you work on your own passes, you need to change the file name in CMakeLists.txt accordingly. Specifically, you can replace the 'samplepass' and 'samplepass.cpp' in the following lines of CMakeLists.txt with your own names.
+# add_library(samplepass MODULE
+#    samplepass.cpp
+#)
+
+
+# Other references:
+# https://llvm.org/docs/GettingStarted.html
+# https://llvm.org/docs/WritingAnLLVMPass.html
+# https://cmake.org/cmake/help/latest/guide/tutorial/index.html

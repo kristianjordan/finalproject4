@@ -1,0 +1,1 @@
+/usr/bin/c++ -fPIC   -shared  -o libsamplepass.so CMakeFiles/samplepass.dir/samplepass.cpp.o  -L/home/kris/llvm-10.0.1.src/build/./lib 

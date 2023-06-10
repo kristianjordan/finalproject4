@@ -1,0 +1,28 @@
+If you run this sample pass on heapoverflow/heapoverflow.ll, command:
+
+/path/to/llvm-10.0.1.src/build/bin/opt -load samplellvmpass/build/libsamplepass.so -sample heapoverflow/heapoverflow.ll
+
+The output should be:
+
+The callinst is:
+  tail call void @llvm.memset.p0i8.i64(i8* nonnull align 16 dereferenceable(96) bitcast ([10 x i64]* @a to i8*), i8 2, i64 96, i1 false), !dbg !23
+calleename: llvm.memset.p0i8.i64
+linenum: 11
+argnum: 0
+ptr type: [10 x i64]*
+pointee type: [10 x i64]
+pointeesize: 80
+argnum: 1 constant: 2
+argnum: 2 constant: 96
+argnum: 3 constant: 0
+The callinst is:
+  tail call void @llvm.memset.p0i8.i64(i8* nonnull align 16 dereferenceable(48) bitcast ([20 x i32]* @b to i8*), i8 2, i64 48, i1 false), !dbg !24
+calleename: llvm.memset.p0i8.i64
+linenum: 12
+argnum: 0
+ptr type: [20 x i32]*
+pointee type: [20 x i32]
+pointeesize: 80
+argnum: 1 constant: 2
+argnum: 2 constant: 48
+argnum: 3 constant: 0

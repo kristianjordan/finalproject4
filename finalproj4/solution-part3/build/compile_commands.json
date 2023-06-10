@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/home/kris/project4/samplellvmpass/build",
+  "command": "/usr/bin/c++  -Dsamplepass_EXPORTS -I/home/kris/llvm-10.0.1.src/include -I/home/kris/llvm-10.0.1.src/build/include  -fPIC   -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -g -fno-rtti -o CMakeFiles/samplepass.dir/samplepass.cpp.o -c /home/kris/project4/samplellvmpass/samplepass.cpp",
+  "file": "/home/kris/project4/samplellvmpass/samplepass.cpp"
+}
+]

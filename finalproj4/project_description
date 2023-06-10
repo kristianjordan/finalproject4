@@ -1,0 +1,67 @@
+* Operating system: Linux or MacOS
+* Environment required: LLVM. 
+* References: https://llvm.org, DocumentForLLVM in the project folder
+
+In this project, you will be given 3 source code files which are vulnerable due to 3 kinds of bugs, memory-overflow, use-after-free and stack-overflow (bonus). You goal is to write a simple program (called 'llvm pass') that makes a pass of the target program to identify these bugs automatically.
+
+To carry out the project, you need to understand a few things which will be covered in class and lab sessions:
+- C programming language
+- Basics LLVM language (see 'LLVM_intro.pdf' for intro and 'LLVM_environment_setup' for instructions in setting up the toolchain and running the sample llvm pass)
+- Part 1: Memory Overflow Vulnerability
+- Part 2: Use After Free Vulnerability
+- Part 3: Stack Overflow Vulnerability (bonus)
+
+It's neccessary to understand few very basic knowledge of llvm framework, we will give a sample llvm pass with detailed notes to help you understand how it works.
+
+General requirements: we will give you desired output of each part of the project, so you can check whether your program detects the bug correctly. Note that even if you can correctly detect the bugs correctly in the given vulnerable files, we also have additional test cases which are not released but will be used to evaluate the correctness of your solution. In these additional test cases, there will be minor differences (e.g., change the vulnerability site line number, change the order of instructions, name of variables, size of objects). Make sure you do not hard code your solution based on the things that may change. Note that we won't add/remove functions or change any function name. For each part, please create a separate directory named solution-part1, solution-part2, solution-part3 so that we know where to look. You can create these directories by duplicating the samplellvmpass.
+
+
+
+Part 1: Memory Overflow Vulnerability Identify
+
+In part 1 of the project, you will be given a source code file which contains one or more overflow vulnerability sites where overflows may happen over one or more global variables defined in the program.
+
+The input is the source code file and the .ll file (llvm representation), and your goal is to output the line number of vulnerability site(s). There will be many memset(addr, size) functions, while the 'addr' is the global variable address, and the 'size' is the size this memcpy() function will change after this address. So you need to determine which memset() causes overflow and print its line number.
+
+Work flow:
+- Identify the size of the object.
+- Compare the size of global array with the size of memset() function to determine if it's an overflow memset().
+
+Submission requirement:
+- (2 points) The llvm pass which can identify memory overflow vulnerabilities. Your pass output (command line output) should be the same as the output we gave (see the 'output' file). Be aware that the llvm pass you write should work beyond the given program. As mentioned in the 'general requirements' earlier, we might change a few things in our own (unreleased) test cases.
+
+
+
+
+Part 2: Use-After-Free Vulnerability Identify
+
+In part 2 of the project, you will be given a source code file which contains one or more use-after-free vulnerability sites. There will be few malloc(), free(), use() sites, and you need to find if there's a use() after free() of an object which is from malloc().
+
+The input is the source code file and the .ll file (llvm representation), and your goal is to output the line number of vulnerability site(s), i.e., the use() site of freed object. Note that there will be objects that are not freed and you should not raise an alarm against those use().
+
+Work flow:
+- Identify objects which are from malloc()
+- Identify objects which are freed (identified by free())
+- Identify objects which are used by use()
+- Check the order of use(), free() of an object.
+
+Submission requirement:
+- (2 points) The llvm pass which can identify use-after-free vulnerabilities. Your pass output (command line output) should be the same as the output we gave (see the 'output' file). Be aware that the llvm pass you write should work beyond the given program. As mentioned in the 'general requirements' earlier, we might change a few things in our own (unreleased) test cases.
+
+
+
+Bonus Part 3: Stack Overflow Vulnerability Identify
+
+In part 3 of the project, you will use the source code file which was used by project 3. Note that there's some slight modification in the source code, in order to make it more practical for LLVM IR.
+
+The input is the source code file and the .ll file (llvm representation), and your goal is to output the line number of the vulnerability site(s) of the stack overflow, e.g., the strcpy() function at line 12. Note that not all strcpy() are problematic. What you need to achieve is to recgonize the vulnerable strcpy() invocations where it takes some adversary-controlled input (i.e., argv[1]) as the source argument, because its size can be arbitrary. You will need to implement a simple inter-procedural dataflow analysis to track the propagation of argv[1] from main() to another function (via argument passing). 
+
+In previous 2 parts you only need to analyze the logic in each function independently (i.e., intra-procedural), which means you don't need to follow the logic from a caller to its callee. But in this part, you are going to do an inter-procedural analysis, which means you need to be concerned about data flow across function calls. 
+
+Work flow:
+- Identify the adversary-controlled argument, i.e., argv[1] of main().
+- Implement a simple inter-procedural dataflow analysis to find how the adversary-controlled input is propagated to the callees of main().
+- Identify if the adversary-controlled input is used in strcpy() function.
+
+Submission requirement:
+- (Bonus 2 points) The llvm pass which can identify the stack overflow vulnerabilities. Your pass output (command line output) should be the same as the output we gave (see the 'output' file). Be aware that the llvm pass you write should work beyond the given program. As mentioned in the 'general requirements' earlier, we might change a few things in our own (unreleased) test cases.

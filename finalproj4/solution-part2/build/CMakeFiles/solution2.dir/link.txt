@@ -1,0 +1,1 @@
+/usr/bin/c++ -fPIC   -shared  -o libsolution2.so CMakeFiles/solution2.dir/solution2.cpp.o  -L/home/kris/llvm-10.0.1.src/build/./lib 

@@ -1,0 +1,4 @@
+/home/kris/project4/samplellvmpass/build/CMakeFiles/rebuild_cache.dir
+/home/kris/project4/samplellvmpass/build/CMakeFiles/edit_cache.dir
+/home/kris/project4/samplellvmpass/build/CMakeFiles/intrinsics_gen.dir
+/home/kris/project4/samplellvmpass/build/CMakeFiles/samplepass.dir

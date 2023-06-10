@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/home/kris/project4/solution-part1/build",
+  "command": "/usr/bin/c++  -Dsolution1_EXPORTS -I/home/kris/llvm-10.0.1.src/include -I/home/kris/llvm-10.0.1.src/build/include  -fPIC   -D_GNU_SOURCE -D__STDC_CONSTANT_MACROS -D__STDC_FORMAT_MACROS -D__STDC_LIMIT_MACROS -g -fno-rtti -o CMakeFiles/solution1.dir/solution1.cpp.o -c /home/kris/project4/solution-part1/solution1.cpp",
+  "file": "/home/kris/project4/solution-part1/solution1.cpp"
+}
+]

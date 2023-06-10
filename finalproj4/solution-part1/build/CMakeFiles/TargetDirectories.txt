@@ -1,0 +1,4 @@
+/home/kris/project4/solution-part1/build/CMakeFiles/rebuild_cache.dir
+/home/kris/project4/solution-part1/build/CMakeFiles/edit_cache.dir
+/home/kris/project4/solution-part1/build/CMakeFiles/intrinsics_gen.dir
+/home/kris/project4/solution-part1/build/CMakeFiles/solution1.dir
